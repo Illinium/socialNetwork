@@ -1,0 +1,14 @@
+.header {
+    background-color: #5a5ace;
+    padding: 10px 20px;
+    display: flex;
+    grid-area: header;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+    color: white;
+}
+
+.header > img {
+    width: 70px;
+}

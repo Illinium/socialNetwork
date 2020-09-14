@@ -1,0 +1,18 @@
+.navbar {
+    background-color: #5a5ace;
+    padding: 20px 0;
+    grid-area: nav;
+}
+
+.navbar > ul > li {
+    list-style: none;
+    padding: 5px 0;
+}
+
+.navbar  a {
+    color: #fff;
+    text-decoration: none;
+}
+.navbar  a.active {
+    color: crimson ;
+}

@@ -1,0 +1,12 @@
+.user {
+    display: grid;
+   align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.user img {
+    height: 200px;
+    width: auto;
+}

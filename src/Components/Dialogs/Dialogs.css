@@ -1,0 +1,12 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+}
+
+.messagesBody {
+    border: 2px solid grey;
+    padding: 10px 15px;
+    max-height: 250px;
+    overflow-y: auto;
+    max-width: 500px;
+}
