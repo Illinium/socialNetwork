@@ -14,7 +14,7 @@ class ProfileContainer extends React.Component {
         }
         this.props.getCurrentUser(userId);
         this.props.getStatusText(userId);
-        if(userId != this.props.id ) {
+        if(userId !== this.props.id ) {
            return this.props.setStatusEditCredentials(false)
         }
         this.props.setStatusEditCredentials(true)

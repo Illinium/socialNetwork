@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-    const {type, payload} = action
+    const {type} = action
     switch (type) {
         case INITIALIZE_APP:
             return {

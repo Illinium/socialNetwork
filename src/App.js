@@ -17,10 +17,9 @@ import {compose} from "redux";
 function App({initialize, initializeApp}) {
     useEffect(() => {
         initializeApp();
-    }, []);
+    }, [initializeApp]);
 
     if (!initialize) {
-        console.log(initialize)
         return <Loader />
     }
   return (

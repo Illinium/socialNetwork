@@ -19,7 +19,7 @@ const initialState = {
     statusEditCredentials: false
 };
 
-export default function (state=  initialState, action) {
+export default function (state = initialState, action) {
     const {type, payload} = action
     switch (type) {
         case GET_USER_PROFILE:
@@ -47,29 +47,24 @@ export default function (state=  initialState, action) {
     }
 }
 
-export const setStatusEditCredentials = (cred) => ({ type: 'STATUS_EDIT_CREDENTIALS', payload: cred })
+export const setStatusEditCredentials = (cred) => ({type: 'STATUS_EDIT_CREDENTIALS', payload: cred});
 
-export const getCurrentUser = (userId) => (dispatch) => {
-    dispatch({ type: 'LOADING_ON_CHANGE', payload: true });
-    profilesApi.getProfile(userId)
-        .then((res) => {
-            dispatch({type: 'GET_USER_PROFILE', payload: res.data})
-            dispatch({ type: 'LOADING_ON_CHANGE', payload: false });
-        })
-}
+export const getCurrentUser = (userId) => async (dispatch) => {
+    dispatch({type: 'LOADING_ON_CHANGE', payload: true});
 
-export const getStatusText = (userId) => (dispatch) => {
-    profilesApi.getStatus(userId)
-        .then((res) => {
+    const res = await profilesApi.getProfile(userId);
+    dispatch({type: 'GET_USER_PROFILE', payload: res.data});
+    dispatch({type: 'LOADING_ON_CHANGE', payload: false});
+};
+
+export const getStatusText = (userId) => async (dispatch) => {
+     const res = await profilesApi.getStatus(userId);
             dispatch({type: 'UPDATE_STATUS', payload: res.data})
-        })
 }
 
-export const updateStatusText = (status) => (dispatch) => {
-    profilesApi.updateStatus(status)
-        .then((res) => {
-            if(res.data.resultCode === 0){
+export const updateStatusText = (status) => async (dispatch) => {
+    const res = await profilesApi.updateStatus(status);
+            if (res.data.resultCode === 0) {
                 dispatch({type: 'UPDATE_STATUS', payload: status})
             }
-        })
 }

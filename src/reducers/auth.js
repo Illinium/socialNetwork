@@ -34,35 +34,28 @@ export default function (state = initialState, action) {
     }
 }
 
-export const addAuthData = () => (dispatch) => {
-    authApi.userAuth()
-        .then((res) => {
-            if(res.data.resultCode === 0) {
-                dispatch({type: 'ADD_AUTH_DATA', payload: res.data.data});
-                dispatch(initializeAppToTrue())
-            } else {
-                dispatch(initializeAppToTrue())
-            }
-        })
-
+export const addAuthData = () => async (dispatch) => {
+    const res = await authApi.userAuth();
+    if (res.data.resultCode === 0) {
+        dispatch({type: 'ADD_AUTH_DATA', payload: res.data.data});
+        dispatch(initializeAppToTrue())
+    } else {
+        dispatch(initializeAppToTrue())
+    }
 }
 
-export const logout = () => (dispatch) => {
-    authApi.logout()
-        .then((res) => {
-            if(res.data.resultCode === 0) {
-                dispatch({ type: 'DELETE_AUTH_DATA'});
-            }
-        })
+export const logout = () => async (dispatch) => {
+    const res = await authApi.logout();
+    if (res.data.resultCode === 0) {
+        dispatch({type: 'DELETE_AUTH_DATA'});
+    }
 }
 
-export const login = ({email, password, rememberMe}) => (dispatch) => {
-    authApi.login(email, password, rememberMe)
-        .then((res) => {
-            if(res.data.resultCode === 0) {
-                dispatch(addAuthData());
-            } else {
-                dispatch(stopSubmit("login", {_error: res.data.messages}))
-            }
-        })
+export const login = ({email, password, rememberMe}) => async (dispatch) => {
+    const res = await authApi.login(email, password, rememberMe);
+    if (res.data.resultCode === 0) {
+        dispatch(addAuthData());
+    } else {
+        dispatch(stopSubmit("login", {_error: res.data.messages}));
+    }
 }

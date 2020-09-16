@@ -3,8 +3,7 @@ import {usersApi} from "../api/baseApi";
 const GET_USERS = 'GET_USERS';
 const PAGE_CHANGED = 'PAGE_CHANGED';
 const TOGGLE_LOADER = 'TOGGLE_LOADER';
-const FOLLOW_USER = 'FOLLOW_USER';
-const UNFOLLOW_USER = 'UNFOLLOW_USER';
+const FOLLOW_USER_TOGGLER = 'FOLLOW_USER_TOGGLER';
 const ADD_DELETE_BTN_BLOCK = 'ADD_DELETE_BTN_BLOCK';
 
 const initialState = {
@@ -16,7 +15,7 @@ const initialState = {
     blockBtnById: []
 };
 
-export default function (state=  initialState, action) {
+export default function (state = initialState, action) {
     const {type, payload} = action
     switch (type) {
         case GET_USERS:
@@ -35,27 +34,14 @@ export default function (state=  initialState, action) {
                 ...state,
                 isLoading: payload
             }
-        case FOLLOW_USER:
-            return {
-                ...state,
-                users: state.users.map(user => {
-                   if (user.id === payload) {
-                       return {
-                           ...user,
-                           followed: true
-                       }
-                   }
-                    return user
-                })
-            }
-        case UNFOLLOW_USER:
+        case FOLLOW_USER_TOGGLER:
             return {
                 ...state,
                 users: state.users.map(user => {
                     if (user.id === payload) {
                         return {
                             ...user,
-                            followed: false
+                            followed: !user.followed
                         }
                     }
                     return user
@@ -73,34 +59,21 @@ export default function (state=  initialState, action) {
     }
 }
 
-export const getAllUsers = (currentPage, count) => (dispatch) => {
-    dispatch({ type: 'TOGGLE_LOADER', payload: true })
-    dispatch({ type: 'PAGE_CHANGED', payload: currentPage })
-    usersApi.getUsers(currentPage, count)
-        .then(res => {
-            dispatch({ type: 'GET_USERS', payload: res.data });
-            dispatch({ type: 'TOGGLE_LOADER', payload: false });
-        })
+export const getAllUsers = (currentPage, count) => async (dispatch) => {
+    dispatch({type: 'TOGGLE_LOADER', payload: true});
+    dispatch({type: 'PAGE_CHANGED', payload: currentPage});
+    const res = await usersApi.getUsers(currentPage, count);
+    dispatch({type: 'GET_USERS', payload: res.data});
+    dispatch({type: 'TOGGLE_LOADER', payload: false});
+
 }
 
-export const followUser = (id) => (dispatch) => {
-    dispatch({ type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: true} });
-    usersApi.onFollow(id)
-        .then((res) => {
-            if(res.data.resultCode === 0){
-                dispatch({ type: 'FOLLOW_USER', payload: id })
-            }
-            dispatch({ type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: false} });
-        })
-}
-
-export const unfollowUser = (id) => (dispatch) => {
-    dispatch({ type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: true} });
-    usersApi.onUnfollow(id)
-        .then((res) => {
-            if(res.data.resultCode === 0){
-                dispatch({ type: 'UNFOLLOW_USER', payload: id })
-            }
-            dispatch({ type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: false} });
-        })
+export const followUnfollowUser = (id, followed) => async (dispatch) => {
+    dispatch({type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: true}});
+    const apiFollowed = followed ? usersApi.onUnfollow(id) : usersApi.onFollow(id);
+    const res = await apiFollowed;
+    if (res.data.resultCode === 0) {
+        dispatch({type: 'FOLLOW_USER_TOGGLER', payload: id})
+    }
+    dispatch({type: 'ADD_DELETE_BTN_BLOCK', payload: {id, bool: false}});
 }
