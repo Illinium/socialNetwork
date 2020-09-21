@@ -1,49 +1,30 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
-class ProfileStatus extends React.Component {
-    state = {
-        prevStatusText: this.props.statusText,
-        newStatusText: this.props.statusText,
-        editStatus: false
+const ProfileStatus = ({statusText, statusEditCredentials, updateStatusText}) => {
+    useEffect(() => {
+        setLocalStatusText(statusText);
+    }, [statusText])
+    const [editStatus, setEditStatus] = useState(false)
+    const [localStatusText, setLocalStatusText] = useState(statusText)
+    const onStatusTextUpdate = () => {
+        setEditStatus(false);
+        updateStatusText(localStatusText);
     }
-
-    onEditStatusChange = () => {
-        this.setState({
-            editStatus: !this.state.editStatus
-        })
-}
-
-    statusTextChange = (e) => {
-        this.setState({
-            newStatusText: e.target.value
-        })
-    }
-    updateStatus = () => {
-        this.onEditStatusChange();
-        if(this.state.prevStatusText !== this.state.newStatusText) {
-            this.setState({
-                prevStatusText: this.state.newStatusText
-            })
-            this.props.updateStatusText(this.state.newStatusText);
-        }
-    }
-
-
-    render () {
         return (
             <div>
-                { this.props.statusEditCredentials ?
-                    this.state.editStatus ?
+                { statusEditCredentials ?
+                    editStatus ?
                         <input type="text" autoFocus={true}
-                               onBlur={this.updateStatus}
-                               value={this.state.newStatusText}
-                               onChange={(e) => this.statusTextChange(e)} /> :
-                        <div onDoubleClick={this.onEditStatusChange}>{this.state.prevStatusText === null ? 'Edit Your Status here.' : this.state.prevStatusText}</div>
-                    : <div>{this.state.prevStatusText}</div>
+                               onBlur={onStatusTextUpdate}
+                               value={localStatusText}
+                               onChange={(e) => setLocalStatusText(e.target.value)} /> :
+                        <div onDoubleClick={() => setEditStatus(true)}>
+                            {statusText}
+                        </div>
+                    : <div>{statusText}</div>
                 }
             </div>
         )
-    }
 
 }
 

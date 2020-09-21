@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {connect} from "react-redux";
 import {
     followUnfollowUser,
@@ -7,39 +7,37 @@ import {
 import User from "./User";
 import styles from './Users.module.css';
 import Loader from "../Common/Loader/Loader";
-import Paginator from "./Paginator";
+import Paginator from "../Common/Paginator/Paginator";
 
-class Users extends React.Component {
+const Users = ({users, totalCount, count, currentPage, isLoading, blockBtnById, getAllUsers, followUnfollowUser }) => {
+    useEffect(() => {
+        getAllUsers(currentPage, count);
+    }, [currentPage, count, getAllUsers]);
 
-    componentDidMount() {
-        this.props.getAllUsers(this.props.currentPage, this.props.count)
-    }
-
-    render() {
-        return (
-            <>
-                {
-                    this.props.isLoading ? <Loader/> : <>
-                        <Paginator totalCount={this.props.totalCount} count={this.props.count}
-                                   getAllUsers={this.props.getAllUsers} currentPage={this.props.currentPage}
-                        />
-                        <div className={styles.users}>
-                            {
-                                this.props.users.map((user) => {
-                                    return <User
-                                        user={user}
-                                        key={user.id}
-                                        followUnfollowUser={this.props.followUnfollowUser}
-                                        blockBtnById={this.props.blockBtnById}
-                                    />
-                                })
-                            }
-                        </div>
-                    </>
-                }
-            </>
-        )
-    }
+    return (
+        <>
+            <Paginator totalCount={totalCount} count={count}
+                       getAllUsers={getAllUsers} currentPage={currentPage}
+                       showNumberOfPages={10}
+            />
+            {
+                isLoading ? <Loader/> : <>
+                    <div className={styles.users}>
+                        {
+                            users.map((user) => {
+                                return <User
+                                    user={user}
+                                    key={user.id}
+                                    followUnfollowUser={followUnfollowUser}
+                                    blockBtnById={blockBtnById}
+                                />
+                            })
+                        }
+                    </div>
+                </>
+            }
+        </>
+    )
 }
 
 const mapStateToProps = state => ({
@@ -51,4 +49,4 @@ const mapStateToProps = state => ({
     blockBtnById: state.users.blockBtnById
 });
 
-export default connect(mapStateToProps, { followUnfollowUser, getAllUsers})(Users);
+export default connect(mapStateToProps, {followUnfollowUser, getAllUsers})(Users);

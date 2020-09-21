@@ -2,12 +2,3 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
-
-.activePage {
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-span {
-    cursor: pointer;
-}

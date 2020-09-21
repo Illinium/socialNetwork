@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 import Comments from "./Comments/Comments";
 import Loader from "../Common/Loader/Loader";
-import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
+import ProfileStatus from "./ProfileStatus";
 
 const Profile = ({posts, currentUser, statusText, statusEditCredentials, updateStatusText}) => {
     if(!currentUser) {
@@ -11,7 +11,7 @@ const Profile = ({posts, currentUser, statusText, statusEditCredentials, updateS
         <Fragment>
             <div className='profile'>
                 <h1>{currentUser.fullName}</h1>
-                <ProfileStatusWithHooks statusText={statusText} statusEditCredentials={statusEditCredentials} updateStatusText={updateStatusText} />
+                <ProfileStatus statusText={statusText} statusEditCredentials={statusEditCredentials} updateStatusText={updateStatusText} />
             </div>
             <ul>
                 {

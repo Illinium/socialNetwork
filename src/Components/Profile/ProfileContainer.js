@@ -1,32 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {connect} from "react-redux";
 import Profile from './Profile';
 import {getCurrentUser, getStatusText, setStatusEditCredentials, updateStatusText} from "../../reducers/profile";
 import {withAuthRedirect} from "../HOC/withAuthRedirect";
 import {compose} from "redux";
 
-class ProfileContainer extends React.Component {
-
-    componentDidMount() {
-        let {userId} = this.props.match.params;
-        if (!userId) {
-            userId = this.props.id
-        }
-        this.props.getCurrentUser(userId);
-        this.props.getStatusText(userId);
-        if(userId !== this.props.id ) {
-           return this.props.setStatusEditCredentials(false)
-        }
-        this.props.setStatusEditCredentials(true)
-    }
-
-    render() {
+const ProfileContainer = (props) => {
+    const{id, getCurrentUser, getStatusText, setStatusEditCredentials, match } = props;
+    useEffect(() => {
+        let {userId} = match.params;
+            if (!userId) {
+                userId = id
+            }
+            getCurrentUser(userId);
+            getStatusText(userId);
+            if(userId !== props.id ) {
+               return setStatusEditCredentials(false)
+            }
+            setStatusEditCredentials(true)
+    }, [id, setStatusEditCredentials, getCurrentUser, getStatusText ]);
         return (
             <>
-             <Profile {...this.props}/>
+             <Profile {...props}/>
             </>
         )
-    }
 }
 
 const mapStateToProps = state => ({

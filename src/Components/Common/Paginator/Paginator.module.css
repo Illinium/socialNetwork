@@ -1,0 +1,10 @@
+.activePage {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #5a5ace;
+}
+
+span {
+    margin:0 4px;
+    cursor: pointer;
+}
