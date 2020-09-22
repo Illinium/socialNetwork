@@ -1,10 +1,9 @@
 import React from "react";
 import styles from './User.module.css';
 import {NavLink} from "react-router-dom";
+import imgStandart from "../../assets/default_user_photo.png"
 
 const User = ({user: {name, photos, followed, id}, followUnfollowUser, blockBtnById} ) => {
-    const imgStandart = "https://wowsciencecamp.org/wp-content/uploads/2018/07/dummy-user-img-1-400x400_x_acf_cropped.png";
-
     return (
         <div className={styles.user}>
             <NavLink to={`/profile/${id}`}>

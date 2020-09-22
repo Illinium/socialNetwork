@@ -4,6 +4,7 @@ const GET_USER_PROFILE = 'GET_USER_PROFILE';
 const LOADING_ON_CHANGE = 'LOADING_ON_CHANGE';
 const UPDATE_STATUS = 'UPDATE_STATUS';
 const STATUS_EDIT_CREDENTIALS = 'STATUS_EDIT_CREDENTIALS';
+const UPDATE_PHOTO_FILE = 'UPDATE_PHOTO_FILE';
 
 const initialState = {
     posts: [
@@ -42,6 +43,14 @@ export default function (state = initialState, action) {
                 ...state,
                 statusEditCredentials: payload
             }
+        case UPDATE_PHOTO_FILE:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    photos: payload
+                }
+            }
         default:
             return state
     }
@@ -67,4 +76,11 @@ export const updateStatusText = (status) => async (dispatch) => {
             if (res.data.resultCode === 0) {
                 dispatch({type: 'UPDATE_STATUS', payload: status})
             }
+}
+
+export const uploadPhotoFile = (photoFile) => async (dispatch) => {
+    const res = await profilesApi.savePhoto(photoFile);
+    if (res.data.resultCode === 0) {
+        dispatch({type: 'UPDATE_PHOTO_FILE', payload: res.data.data.photos})
+    }
 }

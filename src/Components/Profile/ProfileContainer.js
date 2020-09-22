@@ -1,24 +1,31 @@
 import React, { useEffect } from "react";
 import {connect} from "react-redux";
 import Profile from './Profile';
-import {getCurrentUser, getStatusText, setStatusEditCredentials, updateStatusText} from "../../reducers/profile";
+import {
+    getCurrentUser,
+    getStatusText,
+    setStatusEditCredentials,
+    updateStatusText,
+    uploadPhotoFile
+} from "../../reducers/profile";
 import {withAuthRedirect} from "../HOC/withAuthRedirect";
 import {compose} from "redux";
 
 const ProfileContainer = (props) => {
     const{id, getCurrentUser, getStatusText, setStatusEditCredentials, match } = props;
+    let {userId} = match.params;
     useEffect(() => {
-        let {userId} = match.params;
             if (!userId) {
                 userId = id
             }
             getCurrentUser(userId);
             getStatusText(userId);
             if(userId !== props.id ) {
-               return setStatusEditCredentials(false)
+               setStatusEditCredentials(false)
+            } else {
+                setStatusEditCredentials(true)
             }
-            setStatusEditCredentials(true)
-    }, [id, setStatusEditCredentials, getCurrentUser, getStatusText ]);
+    }, [ userId, id, setStatusEditCredentials, getCurrentUser, getStatusText ]);
         return (
             <>
              <Profile {...props}/>
@@ -38,5 +45,5 @@ const mapStateToProps = state => ({
 
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, {getCurrentUser, getStatusText, setStatusEditCredentials, updateStatusText})
+    connect(mapStateToProps, {getCurrentUser, getStatusText, setStatusEditCredentials, updateStatusText, uploadPhotoFile})
 )(ProfileContainer)
